@@ -1,12 +1,12 @@
-import { loggedinReducer } from './auth';
+import authSlice from './auth';
 import { counterReducer } from './counter';
 import { combineReducers } from 'redux'; 
 
 const rootReducer = combineReducers(
   { 
     counter: counterReducer, 
-    loggedin: loggedinReducer
+    auth: authSlice.reducer
   }
 );
 
-export default rootReducer ;
+export default rootReducer;

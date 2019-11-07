@@ -21,9 +21,6 @@ import {
 
 const App: React.FC = () => {
 
-  const count = useSelector((state:any)=>{ return state.counter});
-
-
   return (
     <Router>
       <div>

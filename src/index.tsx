@@ -4,16 +4,43 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider }  from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
 import rootReducer  from './store/reducers'; 
 import createSagaMiddleWare from 'redux-saga';
-import { watchCounter } from './sagas/general';
+import { watchAllSagas } from './sagas';
+import { configureStore } from 'redux-starter-kit';
+import Amplify from 'aws-amplify';
 
 const sagaMiddleware = createSagaMiddleWare();
+const rootStore = configureStore({
+  reducer: rootReducer,
+  middleware: [sagaMiddleware]
+})
 
-const rootStore = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(watchAllSagas);
 
-sagaMiddleware.run(watchCounter);
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+    region: process.env.REACT_APP_S3_REGION,
+    userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+    identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+    userPoolWebClientId: process.env.REACT_APP_COGNITO_APP_CLIENT_ID
+  },
+  Storage: {
+    region: process.env.REACT_APP_S3_REGION,
+    bucket: process.env.REACT_APP_S3_BUCKET,
+    identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID
+  },
+  API: {
+    endpoints: [
+      {
+        name: "manga",
+        endpoint: process.env.REACT_APP_API_GATEWAY_REGION,
+        region: process.env.REACT_APP_API_GATEWAY_REGION
+      },
+    ]
+  }
+});
 
 ReactDOM.render(
   <Provider store={rootStore}>
