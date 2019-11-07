@@ -1,14 +1,24 @@
+import { createSlice } from 'redux-starter-kit';
 
-const loggedinReducer = (state=false, action:any) => {
-  switch(action.type) {
-    case 'LOGGED_IN':
-      state = true;
-    break;
-    case 'LOGGED_OUT':
-      state = false;
-    break;
-  }
-  return state;
+const authInitialState = {
+  isloggedin: false
 }
 
-export { loggedinReducer }
+const authSlice = createSlice({
+  name: 'auth',
+  initialState : authInitialState,
+  reducers : {
+    loginSuccess(state, action) {
+      state = action.payload;
+      console.log("State: ", state);
+      return state;
+    },
+    logoutSuccess(state, action) {
+
+    }
+  }
+})
+
+export const { loginSuccess, logoutSuccess} = authSlice.actions;
+
+export default authSlice;
