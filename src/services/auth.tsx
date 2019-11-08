@@ -1,12 +1,13 @@
-import { LOGIN_TYPE, authState } from '../types';
+import { LOGIN_TYPE, REGISTER_TYPE, authState, CONFIRMATION_TYPE } from '../types';
 
 import { Auth } from 'aws-amplify';
 
 
-const  login = (payload:LOGIN_TYPE, cb :(arg:authState) => void) => {
+
+const  login = (payload:LOGIN_TYPE, cb :(arg:authState, status:string) => void) => {
   
   Auth.signIn(payload.email, payload.password).then(result=>{
-    cb(result);
+    cb(result, "success");
   }).catch(err=>{
     let payload:authState = {
       isloggedin : false,
@@ -15,9 +16,23 @@ const  login = (payload:LOGIN_TYPE, cb :(arg:authState) => void) => {
       message: err.message,
       name: err.name
     }
-    cb(payload);
+    cb(payload, "error");
   });
 
 }
 
-export { login }
+const  register = async (payload:REGISTER_TYPE) => {
+  return await Auth.signUp({
+    username: payload.email,
+    password: payload.password,
+    attributes : {
+      'custom:full_name' : payload.fullname
+    }
+  });
+}
+
+const  verifyRegistrationCode = async (payload:CONFIRMATION_TYPE) => {
+  return await Auth.confirmSignUp(payload.email, payload.verificationCode);
+}
+
+export { login, register, verifyRegistrationCode }
