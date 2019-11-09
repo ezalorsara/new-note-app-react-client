@@ -13,3 +13,22 @@ export type authState = {
   name: string,
   code: string
 }
+
+export type REGISTER_TYPE = {
+  fullname: string,
+  email: string,
+  password: string,
+  confirmPassword: string,
+}
+
+export type CONFIRMATION_TYPE = {
+  email: string,
+  verificationCode: string
+}
+
+export type FORM_ERROR_TYPE = {
+  formError:boolean,
+  fields: {
+    
+  }
+}

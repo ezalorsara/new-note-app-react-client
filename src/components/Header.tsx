@@ -26,7 +26,7 @@ const Header: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Manga Seed
+            NEW NOTES
           </Typography>
           <Button color="inherit" component={ Link } to="register">Register</Button>
           <Button color="inherit" component={ Link } to="login">Login</Button>         
