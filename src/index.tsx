@@ -9,12 +9,26 @@ import createSagaMiddleWare from 'redux-saga';
 import { watchAllSagas } from './sagas';
 import { configureStore } from 'redux-starter-kit';
 import Amplify from 'aws-amplify';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { PersistGate } from 'redux-persist/integration/react'
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  blacklist: ['note']
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const sagaMiddleware = createSagaMiddleWare();
 const rootStore = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: [sagaMiddleware]
 })
+
+const persistor = persistStore(rootStore);
+ 
 
 sagaMiddleware.run(watchAllSagas);
 
@@ -34,8 +48,8 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: "manga",
-        endpoint: process.env.REACT_APP_API_GATEWAY_REGION,
+        name: "notes",
+        endpoint: process.env.REACT_APP_API_GATEWAY_URL,
         region: process.env.REACT_APP_API_GATEWAY_REGION
       },
     ]
@@ -44,7 +58,9 @@ Amplify.configure({
 
 ReactDOM.render(
   <Provider store={rootStore}>
-    <App />
+    <PersistGate loading="null" persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>
 , document.getElementById('root'));
 
