@@ -18,6 +18,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import Home from './containers/Home';
 
 const App: React.FC = () => {
 
@@ -30,7 +31,7 @@ const App: React.FC = () => {
         <Switch>
           <Route path="/register" component={Signup}></Route>
           <Route path="/login" component={Signin}></Route>
-          <Route path="/"></Route>
+          <Route path="/" component={ Home }></Route>
         </Switch>
       </div>
     </Router>

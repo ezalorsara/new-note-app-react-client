@@ -32,3 +32,8 @@ export type FORM_ERROR_TYPE = {
     
   }
 }
+
+export type NOTE_STATE_TYPE = {
+  list_data:[],
+  single_data:any
+}
